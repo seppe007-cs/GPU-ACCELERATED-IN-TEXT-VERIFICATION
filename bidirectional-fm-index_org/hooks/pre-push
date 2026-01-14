@@ -1,0 +1,36 @@
+#!/bin/bash
+
+# Get the list of files that are about to be pushed
+files_changed=$(git diff --name-only @{u} HEAD )
+
+
+
+# Check if relevant files are among the changed files
+if echo "$files_changed" | grep -q -e "buildindex.cpp"; then
+    echo "Relevant files are being pushed. Running pre-push checks..."
+
+    # Ensure definitions.h is also among the changed files
+    if ! echo "$files_changed" | grep -q "definitions.h"; then
+        echo "Error: You must update the COLUMBA_BUILD_INDEX_TAG in definitions.h when you modify build files."
+        exit 1
+    fi
+
+    # Extract old and new version numbers for both tags
+    old_version_1=$(git show @{u}:src/definitions.h | grep -A 1 '#define COLUMBA_BUILD_INDEX_TAG' | grep -o '[0-9]\+' | head -1)
+    new_version_1=$(grep -A 1 '#define COLUMBA_BUILD_INDEX_TAG' src/definitions.h | grep -o '[0-9]\+' | head -1)
+    
+   
+
+   # check if new_version is higher than old_versin
+    if [ "$new_version_1" -le "$old_version_1" ]; then
+        echo "New tag: " $new_version_1
+        echo "Old tag: " $old_version_1
+        echo "Error: The new COLUMBA_BUILD_INDEX_TAG  must be higher than the old version number."
+        exit 1
+    fi
+fi
+
+
+# If everything is fine, allow the push to proceed
+echo "Pre-push checks passed."
+exit 0

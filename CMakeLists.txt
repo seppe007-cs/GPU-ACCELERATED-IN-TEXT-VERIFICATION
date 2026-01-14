@@ -17,5 +17,5 @@ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
 endif()
 # Add executable with both C++ and CUDA sources
 
-add_executable(kernel_tests src/sesion2/main_3.cpp src/sesion2/hyrro_kernel_fixed_2.cu)
-add_executable(GPU_VS_CPU src/sesion3/main.cpp src/sesion3/hyrro_kernel.cu src/sesion3/edit_hyrro.cpp)
+add_executable(kernel_tests kernel_tests/main_3.cpp kernel_tests/hyrro_kernel_fixed_2.cu)
+add_executable(GPU_VS_CPU GPU_VS_CPU/main.cpp GPU_VS_CPU/hyrro_kernel.cu GPU_VS_CPU/edit_hyrro.cpp)
